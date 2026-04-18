@@ -1,0 +1,42 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+dist/
+dist-ssr/
+
+# Security & Secrets (Sensitive Files)
+.env
+.env.test
+.env*.local
+*.pem
+
+# Local Databases & Media
+prisma/*.db
+prisma/*.db-journal
+uploads/
+Wildlife-Backend/uploads/
+
+# Build Output
+Wildlife-frontend/dist/
+Wildlife-Backend/dist/
+
+# OS & Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+documentation.md
+README.md
