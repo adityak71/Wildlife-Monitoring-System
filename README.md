@@ -11,8 +11,11 @@
   [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](#)
   [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)](#)
 
-  **[View Live Demo]**([I will paste it soon])
-  **[View Video Demo]**([I will Paste it soon])
+  **[(Click Here To View Live Demo)](https://wildlife-monitoring-online.vercel.app)**
+
+  **[(Click Here To Watch Video Demo)](https://sdeaditya.in)** (I will Paste it soon)
+
+  **[Click here to read the Complete Technical Architecture & Working Guide](./documentation.md)**
 </div>
 
 ---
@@ -133,8 +136,6 @@ Distributed under the MIT License.
 ## 📚 Technical & Architecture Documentation
 
 Curious about how the multi-part photo uploads work without stalling the server? Or how we utilized Prisma's Cascading Deletes to keep the database clean?
-
-## 👉 **[Click here to read the Complete Technical Architecture & Working Guide](./documentation.md)**
 
 ---
 <div align="center">
