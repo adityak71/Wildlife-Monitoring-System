@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CONSERVATIONIST
+  RESEARCHER
+}
+
+enum ConservationStatus {
+  CRITICALLY_ENDANGERED
+  ENDANGERED
+  VULNERABLE
+  NEAR_THREATENED
+  LEAST_CONCERN
+  DATA_DEFICIENT
+}
+
+enum ActivityType {
+  PATROL
+  WILDLIFE_SIGHTING
+  ILLEGAL_ACTIVITY
+  FOREST_FIRE
+  RESCUE_OPERATION
+  RESEARCH_SURVEY
+  AWARENESS_PROGRAM
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  password     String
+  name         String
+  role         UserRole  @default(CONSERVATIONIST)
+  avatar       String?
+  phone        String?
+  organization String?
+  isActive     Boolean   @default(true)
+  isVerified   Boolean   @default(false)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  activities      MonitoringActivity[]
+  speciesReports  SpeciesReport[]
+  locationReports LocationReport[]
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+model Participant {
+  id                 String             @id @default(cuid())
+  name               String
+  email              String             @unique
+  phone              String
+  address            String?
+  city               String
+  state              String
+  pincode            String?
+  organizationType   String
+  registrationNumber String?
+  verifiedBy         String?
+  status             VerificationStatus @default(PENDING)
+  documents          String[]
+  notes              String?
+  registeredAt       DateTime           @default(now())
+  verifiedAt         DateTime?
+
+  activities MonitoringActivity[]
+
+  @@index([status])
+  @@index([city])
+  @@map("participants")
+}
+
+model Location {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  description  String?
+  latitude     Float
+  longitude    Float
+  area         Float?
+  forestType   String?
+  altitude     Float?
+  climate      String?
+  biodiversity String?
+  threats      String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  activities      MonitoringActivity[]
+  speciesReports  SpeciesReport[]
+  locationReports LocationReport[]
+
+  @@index([name])
+  @@map("locations")
+}
+
+model Species {
+  id                 String             @id @default(cuid())
+  name               String             @unique
+  scientificName     String
+  commonName         String?
+  category           String
+  conservationStatus ConservationStatus
+  population         Int?
+  habitat            String?
+  threats            String[]
+  imageUrl           String?
+  description        String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  reports SpeciesReport[]
+
+  @@index([name])
+  @@index([conservationStatus])
+  @@map("species")
+}
+
+model MonitoringActivity {
+  id            String             @id @default(cuid())
+  title         String
+  description   String?
+  type          ActivityType
+  date          DateTime           @default(now())
+  locationId    String
+  reportedById  String
+  participantId String?
+  status        VerificationStatus @default(PENDING)
+  images        String[]
+  findings      String?
+  actionTaken   String?
+  verifiedBy    String?
+  verifiedAt    DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  location       Location        @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  reportedBy     User            @relation(fields: [reportedById], references: [id], onDelete: Cascade)
+  participant    Participant?    @relation(fields: [participantId], references: [id])
+  speciesReports SpeciesReport[]
+
+  @@index([date])
+  @@index([type])
+  @@index([status])
+  @@index([locationId])
+  @@map("monitoring_activities")
+}
+
+model SpeciesReport {
+  id         String   @id @default(cuid())
+  activityId String
+  speciesId  String
+  count      Int      @default(1)
+  notes      String?
+  images     String[]
+  location   String?
+  behavior   String?
+  createdAt  DateTime @default(now())
+
+  activity      MonitoringActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  species       Species            @relation(fields: [speciesId], references: [id], onDelete: Cascade)
+  user          User?              @relation(fields: [userId], references: [id]) 
+  userId        String? 
+  locationModel Location?          @relation(fields: [locationId], references: [id]) 
+  locationId    String?
+  @@unique([activityId, speciesId])
+  @@index([speciesId])
+  @@map("species_reports")
+}
+
+
+model LocationReport {
+  id           String   @id @default(cuid())
+  reportedById String
+  locationId   String
+  condition    String
+  threats      String[]
+  images       String[]
+  notes        String?
+  reportedAt   DateTime @default(now())
+
+  reportedBy User     @relation(fields: [reportedById], references: [id], onDelete: Cascade)
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([reportedAt])
+  @@map("location_reports")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  oldData   Json?
+  newData   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
