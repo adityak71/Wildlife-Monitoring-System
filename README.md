@@ -13,7 +13,7 @@
 
   **[(Click Here To View Live Demo)](https://wildlife-monitoring-online.vercel.app)**
 
-  **[(Click Here To Watch Video Demo)](https://sdeaditya.in)** (I will Paste it soon)
+  **[(Click Here To Watch Video Demo)](https://www.linkedin.com/posts/aditya-kumar-lpu_reallifeproject-ashokmittal-raghavchadda-ugcPost-7454243558280155137-Ec8I?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEUALCcBk9rsO7Mt6tzcCBFb-jPKwcm6FBc)**
 
   **[Click here to read the Complete Technical Architecture & Working Guide](./documentation.md)**
 </div>
